@@ -225,7 +225,7 @@ class test_nodes_builder_base extends advanced_testcase {
         $student = new stdClass();
         $student->id = 3;
 
-        /* @var phpunit_module_generator $assignmentgenerator */
+        /* @var testing_module_generator $assignmentgenerator */
         $assignmentgenerator = $this->getDataGenerator()->get_plugin_generator('mod_assignment');
         $assignments = array();
         $assignmentrecord = new stdClass();
@@ -491,7 +491,7 @@ class test_nodes_builder_base extends advanced_testcase {
         $student = new stdClass();
         $student->id = 3;
 
-        /* @var phpunit_module_generator $assigngenerator */
+        /* @var testing_module_generator $assigngenerator */
         $assigngenerator = new block_ajax_marking_mod_assign_generator($this->getDataGenerator());
         $assigns = array();
         $assignrecord = new stdClass();
@@ -648,7 +648,7 @@ class test_nodes_builder_base extends advanced_testcase {
         // The setUp() leaves us with 10 users and two teachers in one course.
 
         // Make two coursemodules.
-        /* @var phpunit_module_generator $assigngenerator */
+        /* @var testing_module_generator $assigngenerator */
         $generator = $this->getDataGenerator();
         $assigngenerator = new block_ajax_marking_mod_assign_generator($generator);
         $assignrecord = new stdClass();

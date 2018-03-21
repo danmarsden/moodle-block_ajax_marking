@@ -211,7 +211,8 @@ class block_ajax_marking_assign extends block_ajax_marking_module_base {
                 has_capability('moodle/site:viewfullnames',
                     $assign->get_course_context()),
                 $assign->is_blind_marking(),
-                $assign->get_uniqueid_for_user($user->id)));
+                $assign->get_uniqueid_for_user($user->id),
+                get_extra_user_fields($assign->get_course_context())));
         }
         $submission = $assign->get_user_submission($params['userid'], false);
         $submissiongroup = null;
