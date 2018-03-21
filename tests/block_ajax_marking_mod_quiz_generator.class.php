@@ -149,16 +149,17 @@ class block_ajax_marking_mod_quiz_generator extends testing_module_generator {
 
         $fromform = new stdClass();
         $fromform->category = $questioncategoryid; // Slash separated.
-        $fromform->name = '';
         $fromform->parent = '';
         $fromform->penalty = '';
-        $fromform->questiontext['text'] = '';
-        $fromform->questiontext['format'] = 1;
+        $fromform->name = 'Essay question with filepicker and attachments';
+        $fromform->questiontext = array('text' => 'Please write a story about a frog.', 'format' => FORMAT_HTML);
         $fromform->responseformat = 'editor';
         $fromform->responsefieldlines = 5;
         $fromform->attachments = 0;
-        $fromform->graderinfo['text'] = '';
-        $fromform->graderinfo['format'] = '';
+        $fromform->graderinfo = array('text' => '', 'format' => FORMAT_HTML);
+        $fromform->responserequired = 0;
+        $fromform->attachmentsrequired = 0;
+        $fromform->responsetemplate = array('text' => '', 'format' => FORMAT_HTML);
 
         return $qtypeobj->save_question($question, $fromform);
     }
@@ -251,7 +252,7 @@ class block_ajax_marking_mod_quiz_generator extends testing_module_generator {
             if ($qid != 0) {
                 $newlayout[] = $idstoslots[$qid];
             } else {
-                $newlayout[] = 0;
+              //  $newlayout[] = 1;
             }
         }
         $attempt->layout = implode(',', $newlayout);
@@ -301,7 +302,6 @@ class block_ajax_marking_mod_quiz_generator extends testing_module_generator {
 
         $attempt = $this->start_quiz_attempt($quiz->id, $student->id);
         $quba = question_engine::load_questions_usage_by_activity($attempt->uniqueid);
-
         // This bit strips out bits of quiz_attempt::process_submitted_actions()
         // Simulates data from the form.
         // TODO iterate over the questions.

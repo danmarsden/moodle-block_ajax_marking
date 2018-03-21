@@ -128,9 +128,6 @@ class test_nodes_builder_base extends advanced_testcase {
 
         $submissioncount = 0;
 
-        // Assignment module is disabled in the PHPUnit DB, so we need to re-enable it.
-        $DB->set_field('modules', 'visible', 1, array('name' => 'assignment'));
-
         $classes = block_ajax_marking_get_module_classes(true);
 
         foreach ($classes as $modclass) {
@@ -153,7 +150,6 @@ class test_nodes_builder_base extends advanced_testcase {
 
             }
         }
-
         return $submissioncount;
     }
 
@@ -223,8 +219,7 @@ class test_nodes_builder_base extends advanced_testcase {
 
         $submissioncount = 0;
         // Provide defaults to prevent IDE griping.
-        $student = new stdClass();
-        $student->id = 3;
+        $student = $this->getDataGenerator()->create_user();
 
         // Make forums
         /* @var mod_forum_generator $forumgenerator */
@@ -521,10 +516,10 @@ class test_nodes_builder_base extends advanced_testcase {
         $this->assertEquals(2, count($nodeswithgroups));
         $this->assertEquals(2, count($nodeswithgroups[$assign1->cmid]->groups));
         $this->assertEquals(2, count($nodeswithgroups[$assign2->cmid]->groups));
-        $this->assertArrayHasKey($group1->id, $nodeswithgroups[$assign1->id]->groups);
-        $this->assertArrayHasKey($group2->id, $nodeswithgroups[$assign1->id]->groups);
-        $this->assertEquals(1, $nodeswithgroups[$assign1->id]->groups[$group1->id]->display);
-        $this->assertEquals(1, $nodeswithgroups[$assign1->id]->groups[$group2->id]->display);
+        $this->assertArrayHasKey($group1->id, $nodeswithgroups[$assign1->cmid]->groups);
+        $this->assertArrayHasKey($group2->id, $nodeswithgroups[$assign1->cmid]->groups);
+        $this->assertEquals(1, $nodeswithgroups[$assign1->cmid]->groups[$group1->id]->display);
+        $this->assertEquals(1, $nodeswithgroups[$assign1->cmid]->groups[$group2->id]->display);
 
         // Hide one group at course level.
         $coursesetting = new stdClass();
@@ -556,11 +551,11 @@ class test_nodes_builder_base extends advanced_testcase {
         $message = 'Wrong number of groups';
         $this->assertEquals(2, count($nodescoursemodulehidden[$assign1->cmid]->groups), $message);
         $this->assertEquals(2, count($nodescoursemodulehidden[$assign2->cmid]->groups), $message);
-        $this->assertArrayHasKey($group1->id, $nodescoursemodulehidden[$assign1->id]->groups);
-        $this->assertArrayHasKey($group2->id, $nodescoursemodulehidden[$assign1->id]->groups);
+        $this->assertArrayHasKey($group1->id, $nodescoursemodulehidden[$assign1->cmid]->groups);
+        $this->assertArrayHasKey($group2->id, $nodescoursemodulehidden[$assign1->cmid]->groups);
         $message = 'Display should be 0 after group was hidden at course level';
-        $this->assertEquals(0, $nodescoursemodulehidden[$assign1->id]->groups[$group1->id]->display, $message);
-        $this->assertEquals(1, $nodescoursemodulehidden[$assign1->id]->groups[$group2->id]->display);
+        $this->assertEquals(0, $nodescoursemodulehidden[$assign1->cmid]->groups[$group1->id]->display, $message);
+        $this->assertEquals(1, $nodescoursemodulehidden[$assign1->cmid]->groups[$group2->id]->display);
 
         // Now try hiding at course module level.
         $coursemodulesetting = new stdClass();
@@ -593,11 +588,11 @@ class test_nodes_builder_base extends advanced_testcase {
         $message = 'Wrong number of groups';
         $this->assertEquals(2, count($nodescoursehidden[$assign1->cmid]->groups), $message);
         $this->assertEquals(2, count($nodescoursehidden[$assign2->cmid]->groups), $message);
-        $this->assertArrayHasKey($group1->id, $nodescoursehidden[$assign1->id]->groups);
-        $this->assertArrayHasKey($group2->id, $nodescoursehidden[$assign1->id]->groups);
+        $this->assertArrayHasKey($group1->id, $nodescoursehidden[$assign1->cmid]->groups);
+        $this->assertArrayHasKey($group2->id, $nodescoursehidden[$assign1->cmid]->groups);
         $message = 'Display should be 1 after group was made visible at course module level';
-        $this->assertEquals(1, $nodescoursehidden[$assign1->id]->groups[$group1->id]->display, $message);
-        $this->assertEquals(0, $nodescoursehidden[$assign2->id]->groups[$group1->id]->display);
+        $this->assertEquals(1, $nodescoursehidden[$assign1->cmid]->groups[$group1->id]->display, $message);
+        $this->assertEquals(0, $nodescoursehidden[$assign2->cmid]->groups[$group1->id]->display);
 
     }
 
@@ -669,29 +664,6 @@ class test_nodes_builder_base extends advanced_testcase {
         $filters['questionid'] = 'nextnodefilter'; // We know at least one question was made in an empty DB.
         $nodes = block_ajax_marking_nodes_builder_base::unmarked_nodes($filters);
         $this->assertInternalType('array', $nodes);
-    }
-
-    /**
-     * Make sure we get some nodes back for assignment submissions rather than an error.
-     */
-    public function test_assignment_userid_nodes_work() {
-
-        global $DB;
-
-        $this->make_module_submissions();
-        $this->setUser(key($this->teachers));
-
-        // Assignment.
-        $assignmentmoduleid = $this->get_module_id('assignment');
-        $assignmentcoursemodules = $DB->get_records('course_modules', array('module' => $assignmentmoduleid));
-        $assignmentone = reset($assignmentcoursemodules);
-        $filters = array();
-        $filters['coursemoduleid'] = $assignmentone->id;
-        $filters['userid'] = 'nextnodefilter';
-
-        $nodes = block_ajax_marking_nodes_builder_base::unmarked_nodes($filters);
-        $this->assertInternalType('array', $nodes);
-
     }
 
     /**

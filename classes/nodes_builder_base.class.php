@@ -184,7 +184,6 @@ class block_ajax_marking_nodes_builder_base {
         if ($CFG->debug == DEBUG_DEVELOPER) {
             $debugquery = $displayquery->debuggable_query();
         }
-
         $nodes = $displayquery->execute();
 
         if ($nextnodefilter == 'courseid') {
