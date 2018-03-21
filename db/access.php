@@ -1,3 +1,4 @@
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,28 +15,27 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains all the javascript for the AJAX Marking block
+ * Ajax Marking capabilities.
  *
- * @package    block
- * @subpackage ajax_marking
- * @copyright  2011 Matt Gibson
- * @author     Matt Gibson {@link http://moodle.org/user/view.php?id=81450}
+ * @package    block_ajax_marking
+ * @author     Dan Marsden
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Possibly getting to this point before the main block js file is included.
-if (typeof M.block_ajax_marking === 'undefined') {
-    M.block_ajax_marking = {};
-}
+defined('MOODLE_INTERNAL') || die();
 
-/**
- */
-M.block_ajax_marking.assignment = (function() {
-    "use strict";
+$capabilities = array(
 
-    return {
-        pop_up_arguments : function() {
-            return 'menubar=0,location=0,scrollbars,resizable,width=900,height=630';
-        }
-    };
-}());
+    'block/ajax_marking:addinstance' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
+);

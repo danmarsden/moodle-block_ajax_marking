@@ -263,10 +263,10 @@ class groupid_filters_test extends advanced_testcase {
         // or not. This uses the groupid and coursemodule id concatenated. We start off with everything
         // false i.e. not expected to be present in the list of hidden things..
         $expectedarray = array(
-            $this->group1->id.'-'.$this->assign1->id => false,
-            $this->group1->id.'-'.$this->forum1->id => false,
-            $this->group1->id.'-'.$this->forum1->id => false,
-            $this->group2->id.'-'.$this->forum1->id => false
+            $this->group1->id.'-'.$this->assign1->cmid => false,
+            $this->group1->id.'-'.$this->forum1->cmid => false,
+            $this->group1->id.'-'.$this->forum1->cmid => false,
+            $this->group2->id.'-'.$this->forum1->cmid => false
         );
 
         $this->check_visibility_results($expectedarray, $vanillalist);
@@ -285,10 +285,9 @@ class groupid_filters_test extends advanced_testcase {
         $groupsetting->display = 0;
         $groupsetting->id = $DB->insert_record('block_ajax_marking_groups', $groupsetting);
 
-        $expectedarray[$this->group1->id.'-'.$this->forum1->id] = true;
+        $expectedarray[$this->group1->id.'-'.$this->forum1->cmid] = true;
 
         $vanillalist = $this->get_query_results_as_sequentially_keyed_array($query, $params);
-
         $this->check_visibility_results($expectedarray, $vanillalist);
 
         // Now unhide, then hide it at course level instead, so we should see it hidden for both course modules.
@@ -306,8 +305,8 @@ class groupid_filters_test extends advanced_testcase {
         $groupsetting->display = 0;
         $DB->insert_record('block_ajax_marking_groups', $groupsetting);
 
-        $expectedarray[$this->group1->id.'-'.$this->forum1->id] = true;
-        $expectedarray[$this->group1->id.'-'.$this->assign1->id] = true;
+        $expectedarray[$this->group1->id.'-'.$this->forum1->cmid] = true;
+        $expectedarray[$this->group1->id.'-'.$this->assign1->cmid] = true;
 
         $vanillalist = $this->get_query_results_as_sequentially_keyed_array($query, $params);
 
@@ -321,7 +320,7 @@ class groupid_filters_test extends advanced_testcase {
         $groupsetting->display = 1;
         $groupsetting->id = $DB->insert_record('block_ajax_marking_groups', $groupsetting);
 
-        $expectedarray[$this->group1->id.'-'.$this->forum1->id] = false;
+        $expectedarray[$this->group1->id.'-'.$this->forum1->cmid] = false;
 
         $vanillalist = $this->get_query_results_as_sequentially_keyed_array($query, $params);
 

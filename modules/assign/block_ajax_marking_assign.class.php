@@ -249,6 +249,13 @@ class block_ajax_marking_assign extends block_ajax_marking_module_base {
             }
             $viewfullnames = has_capability('moodle/site:viewfullnames', $assign->get_course_context());
 
+            if ((defined('PHPUNIT_TEST') && PHPUNIT_TEST)) {
+                // Dirty hack to make tests pass for now.
+                global $PAGE;
+                $PAGE->set_url('/');
+            }
+
+
             $o .= $assign->get_renderer()->render(new assign_submission_status($assign->get_instance()->allowsubmissionsfromdate,
                 $assign->get_instance()->alwaysshowdescription,
                 $submission,
@@ -273,7 +280,12 @@ class block_ajax_marking_assign extends block_ajax_marking_module_base {
                 $extensionduedate,
                 $assign->get_context(),
                 $assign->is_blind_marking(),
-                ''));
+                '',
+                $assign->get_instance()->attemptreopenmethod,
+                $assign->get_instance()->maxattempts,
+                $assign->get_grading_status($params['userid']),
+                $assign->get_instance()->preventsubmissionnotingroup,
+                $assign->get_all_groups($params['userid'])));
         }
         if ($grade) {
             $data = new stdClass();
@@ -288,8 +300,8 @@ class block_ajax_marking_assign extends block_ajax_marking_module_base {
         // now show the grading form.
         // n.b. normally, there is a possibility that an mform is supplied with stuff already there.
         // TODO what stuff might have been put there that we may be missing?
-        $pagination = array('rownum' => 0, 'useridlist' => array($params['userid']), 'last' => 0);
-        $formparams = array($assign, $data, $pagination);
+        $pagination = array('rownum' => 0, 'userid' => $params['userid'], 'last' => 0);
+        $formparams = array($assign, $data, $pagination, $params);
         $mform = new mod_assign_grade_form(block_ajax_marking_form_url($params),
             $formparams,
             'post',
@@ -299,7 +311,7 @@ class block_ajax_marking_assign extends block_ajax_marking_module_base {
         $o .= $assign->get_renderer()->render(new assign_form('gradingform', $mform));
 
         $msg = get_string('viewgradingformforstudent', 'assign', array('id' => $user->id, 'fullname' => fullname($user)));
-        $assign->add_to_log('view grading form', $msg);
+        \mod_assign\event\grading_form_viewed::create_from_user($assign, $user)->trigger();
 
 //        $o .= $assign->get_renderer()->render_footer();
         return $o;

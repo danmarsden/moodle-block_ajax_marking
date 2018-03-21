@@ -30,7 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 global $CFG;
 
 require_once($CFG->dirroot . '/blocks/ajax_marking/modules/assign/block_ajax_marking_assign.class.php');
-
+require_once($CFG->dirroot.'/blocks/ajax_marking/tests/block_ajax_marking_mod_assign_generator.class.php');
+require_once($CFG->dirroot.'/enrol/locallib.php');
 /**
  * Initially, this just has basic smoke tests looking for php errors in the rendering code that API
  * changes may have caused.
@@ -110,7 +111,6 @@ class grading_popups_test extends advanced_testcase {
         $submission->userid = reset($this->students)->id;
         $submission->assignment = $assign->id;
         $assigngenerator->create_assign_submission($submission);
-
 
         // Simulate the params from the get request:
         // http: //24moodle.dev:8888/blocks/ajax_marking/actions/grading_popup.php?userid=297&groupid=7&coursemoduleid=1257&courseid=16&node=30

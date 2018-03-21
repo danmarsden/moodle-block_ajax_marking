@@ -55,6 +55,22 @@ class block_ajax_marking_assign_filter_userid_current extends block_ajax_marking
             'table' => 'usertable',
             'column' => 'lastname');
         $this->wrappedquery->add_select($conditions);
+        $conditions = array(
+            'table' => 'usertable',
+            'column' => 'firstnamephonetic');
+        $this->wrappedquery->add_select($conditions);
+        $conditions = array(
+            'table' => 'usertable',
+            'column' => 'alternatename');
+        $this->wrappedquery->add_select($conditions);
+        $conditions = array(
+            'table' => 'usertable',
+            'column' => 'lastnamephonetic');
+        $this->wrappedquery->add_select($conditions);
+        $conditions = array(
+            'table' => 'usertable',
+            'column' => 'middlename');
+        $this->wrappedquery->add_select($conditions);
 
         $table = array(
             'table' => 'user',

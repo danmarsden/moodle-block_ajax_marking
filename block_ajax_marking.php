@@ -107,6 +107,9 @@ class block_ajax_marking extends block_base {
         if ($this->content !== null) {
             return $this->content;
         }
+        $this->content = new stdClass();
+        $this->content->text = '';
+        $this->content->footer = '';
 
         require_once($CFG->dirroot.'/blocks/ajax_marking/lib.php');
 
@@ -114,10 +117,8 @@ class block_ajax_marking extends block_base {
         // Grading permissions exist in at least one course, so display.
         if (count($courses) > 0 || block_ajax_marking_admin_see_all()) {
 
-            $this->content = new stdClass();
-
             // Start building content output.
-            $this->content->footer = '';
+
             $this->content->text = '<div id="block_ajax_marking">';
 
             // Add a style to hide the HTML list and prevent flicker.
@@ -165,7 +166,6 @@ class block_ajax_marking extends block_base {
             // for when the block is just installed and the user can edit. Might look broken
             // otherwise.
             if (has_capability('moodle/course:manageactivities', $PAGE->context)) {
-                $this->content = new stdClass();
                 $this->content->text .= get_string('nogradedassessments', 'block_ajax_marking');
             } else {
                 // This will stop the other functions like has_content() from running all the way

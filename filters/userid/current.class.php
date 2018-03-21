@@ -64,7 +64,6 @@ class block_ajax_marking_filter_userid_current extends block_ajax_marking_query_
             'table' => 'usertable',
             'column' => 'lastname');
         $this->wrappedquery->add_select($conditions);
-
         $table = array(
             'table' => 'user',
             'alias' => 'usertable',
