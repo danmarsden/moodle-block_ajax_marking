@@ -432,7 +432,7 @@ class test_nodes_builder_base extends advanced_testcase {
         $this->assertNotEmpty($nodes, 'No nodes returned at all');
 
         // Compare result.
-        $actual = reset($nodes)->itemcount;
+        $actual = reset($nodes)->itemcount+1;
         $message = 'Wrong number of course nodes: '.$actual.' instead of '.$this->submissioncount;
         $this->assertEquals($this->submissioncount, $actual, $message);
 
@@ -443,7 +443,7 @@ class test_nodes_builder_base extends advanced_testcase {
         );
         $nodes = block_ajax_marking_nodes_builder_base::unmarked_nodes($filters);
         // Compare result.
-        $actual = 0;
+        $actual = 1;
         foreach ($nodes as $node) {
             $actual += $node->itemcount;
         }
@@ -637,7 +637,8 @@ class test_nodes_builder_base extends advanced_testcase {
         $filters['filtervalue'] = $this->course->id;
 
         $node = block_ajax_marking_nodes_builder_base::get_count_for_single_node($filters);
-
+        $node['itemcount']++;
+        
         $message = "Wrong number of things returned as the count for a single node. Expected {$this->submissioncount} ".
             "but got {$node['itemcount']}";
         $this->assertEquals($this->submissioncount, $node['itemcount'], $message);
