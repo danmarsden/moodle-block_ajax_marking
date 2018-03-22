@@ -109,7 +109,7 @@
 }
 #configcontextmenu .inherited.yuimenuitem-checked,
 #maincontextmenu .inherited.yuimenuitem-checked {
-    background-image: url("../../lib/yui/2.9.0/build/assets/skins/sam/menuitem_checkbox_disabled.png");
+    background-image: url([[pix:block_ajax_marking|menuitem_checkbox_disabled]]);
     color: #999999;
 }
 
